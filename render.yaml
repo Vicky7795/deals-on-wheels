@@ -3,6 +3,7 @@ services:
   - type: web
     name: deals-on-wheels
     env: node
+    plan: free
     buildCommand: npm run install:all && npm run build
     startCommand: npm start
     envVars:
