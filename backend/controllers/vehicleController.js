@@ -10,20 +10,37 @@ const verificationService = require('../utils/verificationService');
 // @access  Public
 const getVehicles = async (req, res, next) => {
   try {
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(200).json({
+        success: true,
+        message: 'Database connection is initializing or MONGO_URI needs to be configured in Render Dashboard Environment Variables.',
+        data: {
+          vehicles: [],
+          pagination: { total: 0, page: 1, pages: 0, limit: 9 }
+        }
+      });
+    }
+
     // Automatically release expired reservations
-    await Vehicle.updateMany(
-      {
-        status: 'reserved',
-        $or: [
-          { reservationExpiresAt: { $lt: new Date() } },
-          { reservedBy: null },
-          { reservationExpiresAt: null }
-        ]
-      },
-      {
-        $set: { status: 'available', reservedBy: null, reservationExpiresAt: null }
-      }
-    );
+    try {
+      await Vehicle.updateMany(
+        {
+          status: 'reserved',
+          $or: [
+            { reservationExpiresAt: { $lt: new Date() } },
+            { reservedBy: null },
+            { reservationExpiresAt: null }
+          ]
+        },
+        {
+          $set: { status: 'available', reservedBy: null, reservationExpiresAt: null }
+        }
+      );
+    } catch (e) {
+      // Ignore reservation cleanup if DB is busy
+    }
+
 
     const {
       search,
