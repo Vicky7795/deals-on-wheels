@@ -13,7 +13,16 @@ const generateToken = (id) => {
 // @access  Public
 const register = async (req, res, next) => {
   try {
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database is connecting. Please ensure 0.0.0.0/0 (Allow Access from Anywhere) is added under Network Access in MongoDB Atlas.'
+      });
+    }
+
     const { name, email, phone, password, confirmPassword, role, city, state } = req.body;
+
 
     // Basic Validation
     if (!name || !email || !phone || !password || !confirmPassword) {
@@ -124,7 +133,16 @@ const register = async (req, res, next) => {
 // @access  Public
 const login = async (req, res, next) => {
   try {
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database is connecting. Please ensure 0.0.0.0/0 (Allow Access from Anywhere) is added under Network Access in MongoDB Atlas.'
+      });
+    }
+
     const { email, password } = req.body;
+
 
     if (!email || !password) {
       return res.status(400).json({

@@ -179,6 +179,7 @@ const Register = () => {
                   type="password"
                   name="password"
                   required
+                  autoComplete="new-password"
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Min 8 chars"
@@ -197,6 +198,7 @@ const Register = () => {
                   type="password"
                   name="confirmPassword"
                   required
+                  autoComplete="new-password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   placeholder="Re-enter password"
@@ -205,6 +207,7 @@ const Register = () => {
               </div>
             </div>
           </div>
+
 
           <Button
             type="submit"
