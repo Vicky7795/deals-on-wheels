@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/deals_on_wheels');
+    const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/deals_on_wheels';
+    const conn = await mongoose.connect(mongoUri);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
     
     // One-time migration: Convert legacy buyer and seller roles to user
@@ -16,8 +17,9 @@ const connectDB = async () => {
     }
   } catch (error) {
     console.error(`MongoDB Connection Error: ${error.message}`);
-    process.exit(1);
+    console.error('Please configure a valid MONGO_URI in your Render Environment Variables (e.g. from MongoDB Atlas). Server remaining active...');
   }
 };
+
 
 module.exports = connectDB;
